@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:summary="@string/about_help_summary"
+        android:title="@string/about_help">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://rijul.me"/>
+    </Preference>
+
+    <Preference
+        android:title="@string/about_license"
+        android:summary="@string/about_license_summary">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.apache.org/licenses/LICENSE-2.0"/>
+    </Preference>
+
+    <Preference
+        android:key="about_disclaimer"
+        android:title="@string/about_disclaimer"
+        android:summary="@string/about_disclaimer_summary"/>
+
+    <Preference
+        android:title="@string/about_source_code">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/Rijul-Ahuja/"/>
+    </Preference>
+
+    <Preference
+        android:key="about_rijul"
+        android:title="@string/about_author"
+        android:summary="@string/about_rijul_ahuja"/>
+</PreferenceScreen>

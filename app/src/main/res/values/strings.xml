@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Gesture Unlock</string>
+    <string name="incorrect_gesture">Incorrect Gesture</string>
+    <string name="device_disabled">Disabled, try again in %1$d seconds</string>
+
+    <string name="reboot_or_keyguard_restart">A reboot or keyguard restart is required to apply the changes</string>
+    <string name="loading">Loading...</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="enter_gesture_begin">Enter your gesture to begin</string>
+    <string name="enter_new_gesture">Enter your new gesture</string>
+    <string name="gesture_conflict">Gesture conflicts with %1$s, resetting!</string>
+    <string name="confirm_shortcut">Confirm %1$s</string>
+    <string name="confirm_gesture">Confirm your gesture</string>
+    <string name="keyguard_autorestart">After gesture is saved, keyguard will be autorestarted to prevent device lockout</string>
+    <string name="module_inactive">Module is inactive, touch here for information</string>
+    <string name="module_inactive_title">Gesture Unlock is inactive</string>
+    <string name="module_inactive_message">Gesture Unlock could not hook the Android System methods needed for it to work. This may have several reasons:\n
+    &#x2022; <i>Xposed Framework is not installed</i>\n
+    &#x2022; <i>Xposed is installed and active, but you didn\'t enable Gesture Unlock in Xposed installer (\"Modules\" tab) or didn\'t reboot afterwards.</i>\n
+    &#x2022; <i>Xposed Framework got disabled by Xposed safemode. Look at the Xposed Thread on XDA for further information.</i>\n
+    &#x2022; <i>Gesture Unlock may have encountered a crash. You should send me a bug report on the XDA thread (About -> Help).</i></string>
+    <string name="require_pattern">Gesture Unlock requires pattern, touch to set up</string>
+    <string name="shortcut_apps">Apps</string>
+    <string name="shortcut_activities">Activities</string>
+    <string name="shortcut_target">Select the target</string>
+    <string name="shortcut_select_activity">Select activity</string>
+    <string name="shortcut_add">Add</string>
+    <string name="retry">Retry</string>
+    <string name="next">Next</string>
+    <string name="set_up_gesture">Set up your gesture</string>
+    <string name="change_gesture">Change your gesture</string>
+    <string name="custom_shortcuts">Custom shortcuts</string>
+    <string name="custom_shortcuts_desc">Set up shortcuts directly from the lock screen</string>
+    <string name="about">About</string>
+    <string name="about_desc">Usage, licensing, source code, contributors</string>
+    <string name="pref_restart_keyguard">Restart keyguard</string>
+    <string name="app_settings">App Settings</string>
+    <string name="hide_launcher">Hidden from launcher</string>
+    <string name="failsafe">Failsafe</string>
+    <string name="failsafe_summary_on">Three consecutive long presses on the lock screen will restore your stock PIN</string>
+    <string name="failsafe_summary_off">Use at your own risk</string>
+    <string name="show_gesture_background">Show gesture background</string>
+    <string name="show_gesture">Show gesture</string>
+    <string name="show_gesture_correct">Show gesture correct</string>
+    <string name="show_gesture_error">Show gesture error</string>
+    <string name="show_dialog">Show dialog</string>
+    <string name="show_dialog_desc">On too many incorrect attempts</string>
+    <string name="show_text">Show text</string>
+    <string name="show_text_desc">Correct or incorrect</string>
+    <string name="correct_gesture">Correct</string>
+    <string name="emergency_button">Emergency Button</string>
+    <string name="show_emergency_button">Show emergency button</string>
+    <string name="show_emergency_text">Show emergency text</string>
+    <string name="show_emergency_text_summary_off">Button taps will still work</string>
+    <string name="about_help_summary">Make sure Xposed is active and the module and stock pattern are enabled</string>
+    <string name="about_help">Help</string>
+    <string name="about_license">License</string>
+    <string name="about_license_summary">Apache License, Version 2.0</string>
+    <string name="about_disclaimer">Disclaimer</string>
+    <string name="about_disclaimer_summary">By using this module, you agree that the author(s) is/are not responsible for any damage</string>
+    <string name="about_source_code">Source code</string>
+    <string name="about_author">Author</string>
+    <string name="about_rijul_ahuja" translatable="false">Rijul Ahuja</string>
+    <string name="about_disclaimer_message">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE</string>
+</resources>

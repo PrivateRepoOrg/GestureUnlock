@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <declare-styleable name="GestureOverlayView">
+        <attr name="gestureStrokeWidth" format="float" />
+        <attr name="gestureColor" format="color" />
+        <attr name="uncertainGestureColor" format="color" />
+        <attr name="fadeOffset" format="integer" />
+        <attr name="fadeDuration" format="integer" />
+        <attr name="gestureStrokeType">
+            <enum name="single" value="0" />
+            <enum name="multiple" value="1" />
+        </attr>
+        <attr name="gestureStrokeLengthThreshold" format="float" />
+        <attr name="gestureStrokeSquarenessThreshold" format="float" />
+        <attr name="gestureStrokeAngleThreshold" format="float" />
+        <attr name="eventsInterceptionEnabled" format="boolean" />
+        <attr name="fadeEnabled" format="boolean" />
+        <attr name="orientation" format="integer"/>
+    </declare-styleable>
+</resources>

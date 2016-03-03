@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@android:id/hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <LinearLayout
+        android:id="@+id/lineView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="horizontal"
+        android:background="@color/textColorPrimary"/>
+    <me.rijul.gestureunlock.LockGestureView
+        android:id="@+id/gestures_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fadeEnabled="false"
+        android:gestureStrokeType="multiple"
+        android:gestureStrokeWidth="1.3">
+    </me.rijul.gestureunlock.LockGestureView>
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottom_buttons">
+        <Button
+            android:id="@+id/retry_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/retry" />
+        <Button
+            android:id="@+id/next_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/next" />
+    </LinearLayout>
+</LinearLayout>
