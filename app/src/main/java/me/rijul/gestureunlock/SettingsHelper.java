@@ -4,6 +4,7 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import de.robv.android.xposed.XSharedPreferences;
 
 public class SettingsHelper {
@@ -90,6 +91,8 @@ public class SettingsHelper {
 
     public boolean isVirgin() {return getBoolean(Utils.SETTINGS_IS_VIRGIN, true); }
 
+    public boolean gestureFullscreen() {return getBoolean(Utils.SETTINGS_GESTURE_FULLSCREEN, false); }
+
     public boolean hideEmergencyButton() {return !getBoolean(Utils.SETTINGS_EMERGENCY_BUTTON, true); }
 
     public boolean hideEmergencyText() {return !getBoolean(Utils.SETTINGS_EMERGENCY_TEXT, true); }
@@ -108,9 +111,18 @@ public class SettingsHelper {
 
     public boolean showGestureError() {return getBoolean(Utils.SETTINGS_GESTURE_ERROR, true); }
 
-    public boolean isDisabled() {
-        return isVirgin() || isSwitchOff();
-    }
+    public boolean isDisabled() {return isVirgin() || isSwitchOff();}
 
     public boolean isSwitchOff() {return !getBoolean(Utils.SETTINGS_SWITCH, false); }
+
+    public boolean directlyShowGestureEntry() {return getBoolean(Utils.SETTINGS_GESTURE_DIRECT_ENTRY, false); }
+
+    public int getReadyColor() {return getInt(Utils.SETTINGS_GESTURE_COLOR_READY, 0x2196f3);}
+
+    public int getCorrectColor() {return getInt(Utils.SETTINGS_GESTURE_COLOR_CORRECT, 0xfff44336);}
+
+    public int getWrongColor() {return getInt(Utils.SETTINGS_GESTURE_COLOR_WRONG, 0xFF4CAF50);}
+
+    public float getMinPredictionScore() {return getInt(Utils.SETTINGS_PREDICTION_SCORE, 20)/10;}
+
 }

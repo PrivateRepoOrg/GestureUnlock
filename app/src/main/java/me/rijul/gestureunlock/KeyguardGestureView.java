@@ -1,7 +1,5 @@
 package me.rijul.gestureunlock;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -63,6 +61,13 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         }
     };
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onSettingsReloaded();
+        }
+    };
+
     private Runnable mUnlockRunnable = new Runnable() {
         @Override
         public void run() {
@@ -101,10 +106,6 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         onSettingsReloaded();
     }
 
-    private LayoutParams getParams(float weight) {
-        return new LayoutParams(LayoutParams.MATCH_PARENT, 0, weight);
-    }
-
     private void setUpViews() {
         removeAllViews();
         setUpTextView();
@@ -116,17 +117,18 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         if (mTextView==null)
             mTextView = new TextView(getContext());
         mTextView.setGravity(Gravity.CENTER);
-        LayoutParams layoutParams = getParams(0.07f);
+        LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.topMargin += (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
         layoutParams.bottomMargin += (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
         mTextView.setLayoutParams(layoutParams);
-        setText(mTextView, "", true);
+        mTextView.setText(Utils.getString(getContext(), R.string.enter_gesture_begin));
         addView(mTextView);
     }
 
     private void setUpGestureView() {
         if (mLockGestureView==null)
             mLockGestureView = new LockGestureView(getContext());
-        mLockGestureView.setLayoutParams(getParams(0.77f));
+        mLockGestureView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         mLockGestureView.setOrientation(VERTICAL);
         mLockGestureView.setOnGestureListener(this);
         mLockGestureView.setOnLongClickListener(this);
@@ -137,7 +139,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         if (mEmergencyButton==null)
             mEmergencyButton = new Button(getContext());
         Resources res = Utils.getResourcesForPackage(getContext(), getContext().getPackageName());
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 0.1f);
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llp.gravity = Gravity.CENTER_HORIZONTAL;
         mEmergencyButton.setLayoutParams(llp);
         float textSize = res.getDimensionPixelSize(
@@ -152,9 +154,6 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         mEmergencyButton.setTextColor(textColor);
         getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
         mEmergencyButton.setBackgroundResource(outValue.resourceId);
-        int spacing = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
-        mEmergencyButton.setPadding(mEmergencyButton.getPaddingLeft() + spacing, mEmergencyButton.getPaddingTop(),
-                mEmergencyButton.getPaddingRight() + spacing, mEmergencyButton.getPaddingBottom());
         mEmergencyButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 takeEmergencyCallAction();
@@ -289,6 +288,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
 
     public void onSettingsReloaded() {
         mSettingsHelper.reloadSettings();
+        mGestureStore.load();
         if (mTextView!=null)
             mTextView.setVisibility(mSettingsHelper.shouldShowText() ? View.VISIBLE : View.GONE);
         if (mEmergencyButton!=null)
@@ -297,6 +297,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
             mLockGestureView.setGestureVisible(!mSettingsHelper.shouldHideGesture());
             if (mSettingsHelper.showGestureBackground())
                 mLockGestureView.setBackgroundColor(0x4C000000);
+            mLockGestureView.setSettingsHelper(mSettingsHelper);
         }
         invalidate();
     }
@@ -304,6 +305,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
     @Override
     public void onGestureStart() {
         mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
+        XposedHelpers.callMethod(mCallback, "userActivity");
         mLockGestureView.removeCallbacks(mCancelGestureRunnable);
     }
 
@@ -320,7 +322,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         }
         mLongPress = 0;
         XposedHelpers.callMethod(mCallback, "userActivity");
-        setText(mTextView, "");
+        mTextView.setText("");
         String name = returnGestureName(gesture);
         if (name==null) {
             mLockGestureView.setGestureVisible(mSettingsHelper.showGestureError());
@@ -332,20 +334,20 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
             if (mFailedPatternAttemptsSinceLastTimeout >= 5) {
                 handleAttemptLockout(setLockoutAttemptDeadline());
             }
-            setText(mTextView, Utils.getString(getContext(), R.string.incorrect_gesture));
+            mTextView.setText(Utils.getString(getContext(), R.string.incorrect_gesture));
         } else if (name.equals("master password")) {
-            setText(mTextView, Utils.getString(getContext(), R.string.correct_gesture));
-            mLockGestureView.setGestureVisible(mSettingsHelper.showGestureCorrect());
+            mTextView.setText(Utils.getString(getContext(), R.string.correct_gesture));
             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
+            mLockGestureView.setGestureVisible(mSettingsHelper.showGestureCorrect());
             mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
             mLockGestureView.postDelayed(mUnlockRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
         } else {
             try {
-                setText(mTextView, Utils.getString(getContext(), R.string.correct_gesture));
+                mTextView.setText(name.split("\\|")[1]);
                 mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
                 mLockGestureView.setGestureVisible(mSettingsHelper.showGestureCorrect());
                 mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
-                Intent launchIntent = Intent.parseUri(name, 0);
+                Intent launchIntent = Intent.parseUri(name.split("\\|")[0], 0);
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(launchIntent);
                 mLockGestureView.postDelayed(mUnlockRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
@@ -367,7 +369,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
 
             public void onTick(long millisUntilFinished) {
                 int secs = (int) (millisUntilFinished / 1000L);
-                setText(mTextView, getEnablingInSecs(secs));
+                mTextView.setText(getEnablingInSecs(secs));
             }
         }
                 .start();
@@ -380,7 +382,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
     protected void onAttemptLockoutEnd() {
         mFailedPatternAttemptsSinceLastTimeout = 0;
         mLockGestureView.setEnabled(true);
-        setText(mTextView, "");
+        mTextView.setText("");
         mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
     }
 
@@ -424,11 +426,12 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
     }
 
     private String returnGestureName(Gesture gesture) {
+        float minScore = mSettingsHelper.getMinPredictionScore();
         List<Prediction> predictions = mGestureStore.recognize(gesture);
         for(Prediction prediction : predictions) {
-            if (prediction.score>=2.0) {
+            if (prediction.score > minScore) {
                 if (prediction.name.contains("|"))
-                    return prediction.name.split("\\|")[0];
+                    return prediction.name;
                 else
                     return "master password";
             }
@@ -451,13 +454,21 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         if (mFailedPatternAttemptsSinceLastTimeout>=5)
             return;
         mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
-        setText(mTextView, "");
+        mTextView.setText("");
         mLongPress = 0;
+        try {
+            getContext().unregisterReceiver(mBroadcastReceiver);
+        } catch (IllegalArgumentException e) {}
     }
 
     @Override
     public void onResume(int paramInt) {
-        onPause();
+        if (mFailedPatternAttemptsSinceLastTimeout>=5)
+            return;
+        mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
+        mTextView.setText("");
+        mLongPress = 0;
+        getContext().registerReceiver(mBroadcastReceiver, new IntentFilter(Utils.SETTINGS_CHANGED));
     }
 
     @Override
@@ -520,39 +531,12 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
 
     }
 
-    private void setText(final TextView tv, final String text, final boolean firstRun) {
-        if (tv==null)
-            return;
-        if (!firstRun)
-            if (tv.getText().equals(text))
-                return;
-        if ((firstRun)||(mSettingsHelper.shouldShowText())) {
-            setTranslationY(0);
-            tv
-                    .animate()
-                    .translationY(-getHeight())
-                    .alpha(0.0f).setDuration(100)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            tv.setText(text);
-                            tv.animate().translationY(0).alpha(1.1f).setDuration(200).start();
-                        }
-                    })
-                    .start();
-        }
-    }
-
-    private void setText(final TextView tv, final String text) {
-        setText(tv,text,false);
-    }
-
     @Override
     public boolean onLongClick(View v) {
         XposedHelpers.callMethod(mCallback, "userActivity");
-        v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         ++mLongPress;
+        if (mLongPress>1)
+            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         if (mLongPress==3)
             if (mSettingsHelper.failSafe()) {
                 Intent intent = new Intent(BuildConfig.APPLICATION_ID + ".KILL");

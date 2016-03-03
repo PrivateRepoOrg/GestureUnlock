@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * Created by rijul on 2/3/16.
  */
-@SuppressWarnings("ConstantConditions")
 public class MainFragment extends Fragment implements LockGestureView.OnLockGestureListener, View.OnClickListener {
 
     public static final float LENGTH_THRESHOLD = 60.0f;
@@ -44,6 +43,7 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_gesture, container, false);
         mLockGestureView = (LockGestureView) rootView.findViewById(R.id.gestures_overlay);
+        mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
         mLockGestureView.setOnGestureListener(this);
         mFinishRunnable = new Runnable() {
             @Override
@@ -52,10 +52,12 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
                 mGestureStoreFile.setReadable(true, false);
                 if (mRequestCode==-1)
                     startActivity(new Intent(getActivity(), SettingsActivity.class));
-                else
+                else {
                     getActivity().setResult(MainActivity.RESULT_OK, getActivity().getIntent());
-                if ((mRequestCode==MainActivity.CHANGE_GESTURE) && (!new SettingsHelper(getActivity()).isSwitchOff()))
-                    Utils.restartKeyguard(getActivity());
+                    getActivity().sendBroadcast(new Intent(Utils.SETTINGS_CHANGED));
+                }
+                //if ((mRequestCode==MainActivity.CHANGE_GESTURE) && (!new SettingsHelper(getActivity()).isSwitchOff()))
+                  //  Utils.restartKeyguard(getActivity());
                 getActivity().finish();
             }
         };
@@ -149,8 +151,10 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
                             ((TextView) getView().findViewById(android.R.id.hint)).setText(R.string.confirm_gesture);
                             mLockGestureView.clearGesture();
                             mChosenGesture = null;
+                            /*
                             if (!new SettingsHelper(getActivity()).isSwitchOff())
                                 Toast.makeText(getActivity(), R.string.keyguard_autorestart, Toast.LENGTH_SHORT).show();
+                                */
                         }
                     }
                 } else {
@@ -170,7 +174,7 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
                         if (gestureMatch(mChosenGesture, mUri + "|" + mName)) {
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
                             mLockGestureView.postDelayed(mFinishRunnable, 300);
-                            Toast.makeText(getActivity(), R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
                         } else {
                             getView().findViewById(R.id.next_button).setEnabled(false);
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
@@ -184,9 +188,10 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
 
     private boolean gestureMatch(Gesture gesture, String gestureName) {
         ArrayList<Prediction> predictions = mGestureStore.recognize(gesture);
+        float minScore = new SettingsHelper(getActivity()).getMinPredictionScore();
         if (predictions.size() > 0) {
             Prediction prediction = predictions.get(0);
-            if (prediction.score > 2) {
+            if (prediction.score > minScore) {
                 if (prediction.name.equals(gestureName)) {
                     Gesture foundGesture = mGestureStore.getGestures(gestureName).get(0);
                     if (foundGesture.getStrokesCount() == gesture.getStrokesCount())
@@ -228,6 +233,8 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
 
     @Override
     public void onGestureStart() {
+        if (!mLockGestureView.settingsHelperIsSet())
+            mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
         mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
         mLockGestureView.removeCallbacks(mClearGestureRunnable);
         getView().findViewById(R.id.next_button).setEnabled(false);
@@ -262,9 +269,10 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
     }
 
     private String shortcutAlreadyExists(Gesture gesture) {
+        float minScore = new SettingsHelper(getActivity()).getMinPredictionScore();
         List<Prediction> predictions = mGestureStore.recognize(gesture);
         for(Prediction prediction : predictions) {
-            if (prediction.score>=2.0) {
+            if (prediction.score > minScore) {
                 if (prediction.name.contains("|"))
                     return prediction.name.split("\\|")[1];
                 else

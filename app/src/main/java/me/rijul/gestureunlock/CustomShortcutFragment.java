@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
@@ -120,7 +122,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         menu.setHeaderTitle(((NamedGesture) info.targetView.getTag()).name);
         menu.add(0, MENU_ID_EDIT, 0, R.string.edit);
-        menu.add(0, MENU_ID_DELETE, 0, R.string.delete);
+        //menu.add(0, MENU_ID_DELETE, 0, R.string.delete);
     }
 
     @Override
@@ -150,7 +152,10 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
     private void deleteShortcut(NamedGesture namedGesture) {
         GestureLibrary sStore = GestureLibraries.fromFile(new File("/data/data/" + BuildConfig.APPLICATION_ID + "/files", "gu_gestures"));
         sStore.removeGesture(namedGesture.uri + "|" + namedGesture.name, namedGesture.gesture);
+        if (sStore.getGestures(namedGesture.uri + "|" + namedGesture.name) != null)
+            sStore.removeEntry(namedGesture.uri + "|" + namedGesture.name);
         sStore.save();
+        Toast.makeText(getActivity(), namedGesture.name, Toast.LENGTH_SHORT).show();
         GestureAdapter gestureAdapter = ((GestureAdapter) getListView().getAdapter());
         gestureAdapter.setNotifyOnChange(false);
         gestureAdapter.remove(namedGesture);
@@ -201,6 +206,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
         public static final int STATUS_CANCELLED = -1;
         public static final int STATUS_OK = 0;
         public static final int STATUS_ERROR = -2;
+        private GestureAdapter mAdapter;
 
         @Override
         protected void onPreExecute() {
@@ -210,9 +216,9 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
             mPathColor = resources.getColor(R.color.colorPrimary);
             mThumbnailInset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, resources.getDisplayMetrics());;
             mThumbnailSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, resources.getDisplayMetrics());;;
-
-            ((GestureAdapter) getListView().getAdapter()).setNotifyOnChange(false);
-            ((GestureAdapter) getListView().getAdapter()).clear();
+            mAdapter = (GestureAdapter) getListView().getAdapter();
+            mAdapter.setNotifyOnChange(false);
+            mAdapter.clear();
         }
 
         @Override
@@ -240,7 +246,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
                         namedGesture.uri = name.substring(0, separator);
                         namedGesture.name = name.substring(separator + 1);
 
-                        ((GestureAdapter) getListView().getAdapter()).addBitmap(namedGesture.gesture.getID(), bitmap);
+                        mAdapter.addBitmap(namedGesture.gesture.getID(), bitmap);
                         publishProgress(namedGesture);
                     }
                 }
@@ -255,7 +261,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
         protected void onProgressUpdate(NamedGesture... values) {
             super.onProgressUpdate(values);
 
-            final GestureAdapter adapter = ((GestureAdapter) getListView().getAdapter());
+            final GestureAdapter adapter = mAdapter;
             adapter.setNotifyOnChange(false);
 
             for (NamedGesture gesture : values) {

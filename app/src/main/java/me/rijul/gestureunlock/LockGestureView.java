@@ -2,14 +2,14 @@ package me.rijul.gestureunlock;
 
 import android.content.Context;
 import android.gesture.Gesture;
-import android.graphics.Color;
 import android.util.AttributeSet;
 
 public class LockGestureView extends GestureOverlayView implements GestureOverlayView.OnGesturingListener,
         GestureOverlayView.OnGesturePerformedListener {
-    private static final int READY_COLOR = Color.BLUE;
-    private static final int WRONG_COLOR = Color.RED;
-    private static final int CORRECT_COLOR = Color.GREEN;
+    private int READY_COLOR;
+    private int WRONG_COLOR;
+    private int CORRECT_COLOR;
+    private SettingsHelper mSettingsHelper;
 
     private DisplayMode mGestureDisplayMode = DisplayMode.Ready;
     private boolean mInStealthMode = false;
@@ -178,5 +178,16 @@ public class LockGestureView extends GestureOverlayView implements GestureOverla
     private void notifyGestureDetected(Gesture gesture) {
         if (mOnGestureListener != null)
             mOnGestureListener.onGestureDetected(gesture);
+    }
+
+    public void setSettingsHelper(SettingsHelper settingsHelper) {
+        mSettingsHelper = settingsHelper;
+        READY_COLOR = mSettingsHelper.getReadyColor();
+        WRONG_COLOR = mSettingsHelper.getWrongColor();
+        CORRECT_COLOR = mSettingsHelper.getCorrectColor();
+    }
+
+    public boolean settingsHelperIsSet() {
+        return mSettingsHelper!=null;
     }
 }

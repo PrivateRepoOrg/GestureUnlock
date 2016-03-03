@@ -4,7 +4,7 @@
         android:summary="@string/about_help_summary"
         android:title="@string/about_help">
         <intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/Rijul-Ahuja/GestureUnlock/issues"/>
+            android:data="http://forum.xda-developers.com/xposed/modules/aosp-cm-htc-gesture-unlock-custom-t3328257"/>
     </Preference>
 
     <Preference

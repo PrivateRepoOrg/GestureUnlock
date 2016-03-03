@@ -4,10 +4,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.widget.Toast;
 
 /**
@@ -35,19 +35,17 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         }
         else if (key.equals(Utils.SETTINGS_HIDE_LAUNCHER)) {
-            if (((CheckBoxPreference) preference).isChecked()) {
-                ComponentName componentName = new ComponentName(getActivity(), "me.rijul.knockcode.MainActivity-Alias");
+            if (((SwitchPreference) preference).isChecked()) {
+                ComponentName componentName = new ComponentName(getActivity(), BuildConfig.APPLICATION_ID + ".MainActivity-Alias");
                 getActivity().getPackageManager().setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
             } else {
-                ComponentName componentName = new ComponentName(getActivity(), "me.rijul.knockcode.MainActivity-Alias");
+                ComponentName componentName = new ComponentName(getActivity(), BuildConfig.APPLICATION_ID + ".MainActivity-Alias");
                 getActivity().getPackageManager().setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
             }
-            Toast.makeText(getActivity(), "A reboot or launcher restart may be required to apply the changes", Toast.LENGTH_SHORT).show();
             return true;
-        } else if ((key.equals(Utils.SETTINGS_CUSTOM_SHORTCUTS) || (key.equals(Utils.SETTINGS_ABOUT))))
-                return false;
-        Toast.makeText(getActivity(), "A reboot or keyguard restart is required to apply the changes", Toast.LENGTH_SHORT).show();
-        return true;
+        } else if (key.equals(Utils.SETTINGS_GESTURE_FULLSCREEN))
+            Toast.makeText(getActivity(), R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     @Override
@@ -60,9 +58,20 @@ public class SettingsFragment extends PreferenceFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==MainActivity.RESULT_OK) {
             findPreference(Utils.SETTINGS_CUSTOM_SHORTCUTS).setEnabled(true);
-            findPreference(Utils.SETTINGS_CHANGE_GESTURE).setTitle("Change your gesture");
-            if (!new SettingsHelper(getActivity()).isSwitchOff())
-                Toast.makeText(getActivity(), "A reboot or keyguard restart is required to apply the changes", Toast.LENGTH_SHORT).show();
+            findPreference(Utils.SETTINGS_CHANGE_GESTURE).setTitle(R.string.change_gesture);
+            //if (!new SettingsHelper(getActivity()).isSwitchOff())
+              //  Toast.makeText(getActivity(), R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().sendBroadcast(new Intent(Utils.SETTINGS_CHANGED));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

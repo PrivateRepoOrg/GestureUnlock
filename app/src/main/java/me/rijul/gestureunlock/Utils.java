@@ -28,8 +28,14 @@ public class Utils {
     public static final String SETTINGS_FAILSAFE = "settings_failsafe";
     public static final String SETTINGS_HIDE_LAUNCHER = "settings_hide_launcher";
     public static final String SETTINGS_SWITCH = "switch";
-    public static final String SETTINGS_ABOUT = "settings_about";
     public static final String SETTINGS_CUSTOM_SHORTCUTS = "settings_custom_shortcuts";
+    public static final String SETTINGS_GESTURE_DIRECT_ENTRY = "settings_gesture_direct_entry";
+    public static final String SETTINGS_GESTURE_COLOR_READY = "settings_gesture_color_ready";
+    public static final String SETTINGS_GESTURE_COLOR_CORRECT = "settings_gesture_color_correct";
+    public static final String SETTINGS_GESTURE_COLOR_WRONG = "settings_gesture_color_wrong";
+    public static final String SETTINGS_GESTURE_FULLSCREEN = "settings_gesture_fullscreen";
+    public static final String SETTINGS_PREDICTION_SCORE = "settings_prediction_score";
+    public static final String SETTINGS_CHANGED = BuildConfig.APPLICATION_ID + "_SETTINGS_CHANGED";
 
     public static final String ABOUT_DISCLAIMER = "about_disclaimer";
     public static final String ABOUT_RIJUL = "about_rijul";

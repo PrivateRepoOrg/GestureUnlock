@@ -34,7 +34,7 @@ public class AboutFragment extends PreferenceFragment {
             message.setText(R.string.about_disclaimer_message);
             message.setGravity(Gravity.CENTER);
             builder.setView(message);
-            builder.setPositiveButton(" OK ", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
                 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sample="http://schemas.android.com/apk/res-auto">
 
     <Preference
         android:key="settings_change_gesture"
@@ -41,15 +42,19 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Gesture Appearance">
+        android:title="@string/gesture_settings_title">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="settings_gesture_background"
             android:title="@string/show_gesture_background" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_visible"
             android:title="@string/show_gesture" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_gesture_fullscreen"
+            android:title="@string/settings_gesture_fullscreen" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_correct"
@@ -68,6 +73,36 @@
             android:key="settings_gesture_text"
             android:title="@string/show_text"
             android:summary="@string/show_text_desc"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_gesture_direct_entry"
+            android:title="@string/direct_gesture"
+            android:summary="@string/direct_gesture_summary"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_ready"
+            android:title="@string/gesture_color"
+            android:defaultValue="@color/colorPrimary"
+            alphaSlider="true"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_correct"
+            android:title="@string/gesture_color_correct"
+            android:defaultValue="@color/colorCorrect"
+            alphaSlider="true"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_wrong"
+            android:title="@string/gesture_color_wrong"
+            android:defaultValue="@color/colorWrong"
+            alphaSlider="true"/>
+        <me.rijul.gestureunlock.SeekBarPreference
+            android:key="settings_prediction_score"
+            android:title="@string/settings_min_score"
+            android:summary="@string/settings_min_score_desc"
+            minimum="10"
+            maximum="100"
+            interval="5"
+            android:defaultValue="20"
+            monitorBoxEnabled="true"
+            monitorBoxUnit=""/>
     </PreferenceCategory>
 
     <PreferenceCategory
