@@ -4,7 +4,7 @@
         android:summary="@string/about_help_summary"
         android:title="@string/about_help">
         <intent android:action="android.intent.action.VIEW"
-            android:data="http://rijul.me"/>
+            android:data="https://github.com/Rijul-Ahuja/GestureUnlock/issues"/>
     </Preference>
 
     <Preference
@@ -22,7 +22,7 @@
     <Preference
         android:title="@string/about_source_code">
         <intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/Rijul-Ahuja/"/>
+            android:data="https://github.com/Rijul-Ahuja/GestureUnlock"/>
     </Preference>
 
     <Preference
