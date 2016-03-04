@@ -2,14 +2,14 @@ package me.rijul.gestureunlock;
 
 import android.content.Context;
 import android.gesture.Gesture;
+import android.graphics.Color;
 import android.util.AttributeSet;
 
 public class LockGestureView extends GestureOverlayView implements GestureOverlayView.OnGesturingListener,
         GestureOverlayView.OnGesturePerformedListener {
-    private int READY_COLOR;
-    private int WRONG_COLOR;
-    private int CORRECT_COLOR;
-    private SettingsHelper mSettingsHelper;
+    private int READY_COLOR = Color.BLUE;
+    private int WRONG_COLOR = Color.RED;
+    private int CORRECT_COLOR = Color.GREEN;
 
     private DisplayMode mGestureDisplayMode = DisplayMode.Ready;
     private boolean mInStealthMode = false;
@@ -81,7 +81,6 @@ public class LockGestureView extends GestureOverlayView implements GestureOverla
         addOnGesturePerformedListener(this);
         setGestureColor(READY_COLOR);
         setUncertainGestureColor(READY_COLOR);
-        setGestureStrokeType(GESTURE_STROKE_TYPE_MULTIPLE);
         mClearPerformedGesture = false;
     }
 
@@ -180,14 +179,15 @@ public class LockGestureView extends GestureOverlayView implements GestureOverla
             mOnGestureListener.onGestureDetected(gesture);
     }
 
-    public void setSettingsHelper(SettingsHelper settingsHelper) {
-        mSettingsHelper = settingsHelper;
-        READY_COLOR = mSettingsHelper.getReadyColor();
-        WRONG_COLOR = mSettingsHelper.getWrongColor();
-        CORRECT_COLOR = mSettingsHelper.getCorrectColor();
+    public void updateColors(SettingsHelper settingsHelper) {
+        READY_COLOR = settingsHelper.getReadyColor();
+        WRONG_COLOR = settingsHelper.getWrongColor();
+        CORRECT_COLOR = settingsHelper.getCorrectColor();
+        setDisplayMode(mGestureDisplayMode);
+        setUncertainGestureColor(READY_COLOR);
     }
 
-    public boolean settingsHelperIsSet() {
-        return mSettingsHelper!=null;
-    }
+    //public boolean settingsHelperIsSet() {
+      //  return mSettingsHelper!=null;
+    //}
 }

@@ -27,7 +27,9 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         String key = preference.getKey();
-        if (key.equals(Utils.SETTINGS_CHANGE_GESTURE)) {
+        if (key==null)
+            return false;
+        else if (key.equals(Utils.SETTINGS_CHANGE_GESTURE)) {
             startActivityForResult(new Intent(getActivity(), MainActivity.class), MainActivity.CHANGE_GESTURE);
             return true;
         } else if (key.equals(Utils.SETTINGS_RESTART_KEYGUARD)) {

@@ -27,7 +27,9 @@ public class AboutFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         String key = preference.getKey();
-        if (key.equals(Utils.ABOUT_DISCLAIMER)) {
+        if (key==null)
+            return false;
+        else if (key.equals(Utils.ABOUT_DISCLAIMER)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.about_disclaimer);
             final TextView message = new TextView(getActivity());

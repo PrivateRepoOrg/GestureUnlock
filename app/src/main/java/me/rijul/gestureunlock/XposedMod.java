@@ -96,39 +96,16 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         findAndHookMethod(KeyguardHostView, "onResume", int.class, mOnResumeHook);
         Class<?> KeyguardUpdateMonitorCallback = XposedHelpers.findClass(packageName + ".KeyguardUpdateMonitorCallback",
                 lpparam.classLoader);
-        Class<?> state;
         if (packageName.equals("com.htc.lockscreen.keyguard")) {
             XposedBridge.log("[GestureUnlock] HTC Device");
-            state = XposedHelpers.findClass("com.htc.lockscreen.wrapper.IccCardConstants.State",
-                    lpparam.classLoader);
             findAndHookMethod(KeyguardHostView, "showSecurityScreen", "com.htc.lockscreen.keyguard.KeyguardSecurityModel$SecurityMode",
                     mShowSecurityScreenHook);
         }
         else {
-            state = XposedHelpers.findClass("com.android.internal.telephony.IccCardConstants.State",
-                    lpparam.classLoader);
             findAndHookMethod(KeyguardHostView, "showSecurityScreen", "com.android.keyguard.KeyguardSecurityModel$SecurityMode",
                     mShowSecurityScreenHook);
         }
-        try {
-            findAndHookMethod(KeyguardUpdateMonitorCallback, "onSimStateChanged", int.class, int.class, state, mOnSimStateChangedHook);
-            XposedBridge.log("[GestureUnlock] 5.1.x or 6.0.x device");
-        }
-        catch (NoSuchMethodError e)
-        {
-            try {
-                findAndHookMethod(KeyguardUpdateMonitorCallback, "onSimStateChanged", long.class, state, mOnSimStateChangedHook);
-                XposedBridge.log("[GestureUnlock] 5.0.x device");
-            }
-            catch (NoSuchMethodError e2) {
-                try {
-                    findAndHookMethod(KeyguardUpdateMonitorCallback, "onSimStateChanged", int.class, state, mOnSimStateChangedHook);
-                }
-                catch (NoSuchMethodError e3) {
-                    XposedBridge.log("[GestureUnlock] Unknown type of device, not hooking onSimStateChanged");
-                }
-            }
-        }
+        XposedBridge.hookAllMethods(KeyguardUpdateMonitorCallback, "onSimStateChanged", mOnSimStateChangedHook);
         findAndHookMethod(KeyguardUpdateMonitorCallback, "onPhoneStateChanged", int.class, mOnPhoneStateChangedHook);
 
         //marshmallow vs lollipop
@@ -161,8 +138,7 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
                         mKeyguardGestureView.updateEmergencyCallButton();
                     }
                     else {
-                        int phoneState = (int) XposedHelpers.callMethod(mKeyguardGestureView.mKeyguardUpdateMonitor, "getPhoneState");
-                        mKeyguardGestureView.updateEmergencyCallButton(phoneState);
+                        mKeyguardGestureView.updateEmergencyCallButton(0);
                     }
                     param.setResult(null);
                 }

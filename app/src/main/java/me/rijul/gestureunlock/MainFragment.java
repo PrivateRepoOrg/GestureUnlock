@@ -43,7 +43,7 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_gesture, container, false);
         mLockGestureView = (LockGestureView) rootView.findViewById(R.id.gestures_overlay);
-        mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
+        //mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
         mLockGestureView.setOnGestureListener(this);
         mFinishRunnable = new Runnable() {
             @Override
@@ -233,8 +233,8 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
 
     @Override
     public void onGestureStart() {
-        if (!mLockGestureView.settingsHelperIsSet())
-            mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
+        //if (!mLockGestureView.settingsHelperIsSet())
+          //  mLockGestureView.setSettingsHelper(new SettingsHelper(getActivity()));
         mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
         mLockGestureView.removeCallbacks(mClearGestureRunnable);
         getView().findViewById(R.id.next_button).setEnabled(false);

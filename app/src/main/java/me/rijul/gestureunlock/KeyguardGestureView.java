@@ -56,8 +56,8 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
     private Runnable mCancelGestureRunnable = new Runnable() {
         public void run() {
             mLockGestureView.clearGesture();
-            mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
             mLockGestureView.setGestureVisible(!mSettingsHelper.shouldHideGesture());
+            mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Ready);
         }
     };
 
@@ -297,7 +297,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
             mLockGestureView.setGestureVisible(!mSettingsHelper.shouldHideGesture());
             if (mSettingsHelper.showGestureBackground())
                 mLockGestureView.setBackgroundColor(0x4C000000);
-            mLockGestureView.setSettingsHelper(mSettingsHelper);
+            mLockGestureView.updateColors(mSettingsHelper);
         }
         invalidate();
     }
@@ -327,7 +327,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         if (name==null) {
             mLockGestureView.setGestureVisible(mSettingsHelper.showGestureError());
             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
-            mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureError() ? 5000 : 0);
+            mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureError() ? 300 : 0);
             mTotalFailedPatternAttempts++;
             mFailedPatternAttemptsSinceLastTimeout++;
             reportFailedUnlockAttempt();
@@ -337,15 +337,15 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
             mTextView.setText(Utils.getString(getContext(), R.string.incorrect_gesture));
         } else if (name.equals("master password")) {
             mTextView.setText(Utils.getString(getContext(), R.string.correct_gesture));
-            mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
             mLockGestureView.setGestureVisible(mSettingsHelper.showGestureCorrect());
+            mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
             mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
             mLockGestureView.postDelayed(mUnlockRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
         } else {
             try {
                 mTextView.setText(name.split("\\|")[1]);
-                mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
                 mLockGestureView.setGestureVisible(mSettingsHelper.showGestureCorrect());
+                mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
                 mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureCorrect() ? 300 : 0);
                 Intent launchIntent = Intent.parseUri(name.split("\\|")[0], 0);
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

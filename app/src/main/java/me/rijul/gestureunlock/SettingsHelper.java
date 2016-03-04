@@ -91,7 +91,7 @@ public class SettingsHelper {
 
     public boolean isVirgin() {return getBoolean(Utils.SETTINGS_IS_VIRGIN, true); }
 
-    public boolean gestureFullscreen() {return getBoolean(Utils.SETTINGS_GESTURE_FULLSCREEN, false); }
+    public boolean gestureFullscreen() {return getBoolean(Utils.SETTINGS_GESTURE_FULLSCREEN, false) && !isDisabled(); }
 
     public boolean hideEmergencyButton() {return !getBoolean(Utils.SETTINGS_EMERGENCY_BUTTON, true); }
 
