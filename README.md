@@ -14,6 +14,12 @@ The only caveats are because of the way Xposed works.
 + Your gestures will be visible to any one or any app on your device. No root required.
 + You need root to restart the keyguard after changing the gesture full screen option. It is not mandatory, you could manually reboot if you require. All other changes will be reflected automatically, but not this one.
 
+Screenshots:
+------
+![Gesture Entry](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/gestureLock.png)
+![Custom Shortcuts](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/gestureLock.png)
+![Settings](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/settingsActivity_2.png)
+
 Links:
 ------
 + [XDA Forum](http://forum.xda-developers.com/xposed/modules/aosp-cm-htc-gesture-unlock-custom-t3328257)
