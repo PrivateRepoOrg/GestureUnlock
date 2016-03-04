@@ -11,8 +11,8 @@ Compatibility :
 I personally test on CM13, and I will support CM12.0, CM12.1, AOSP 5.x and 6.0.x and derivatives. HTC support is limited unless I find a tester. Support for other OEM ROMs is absent beyond basic working functionality.
 
 The only caveats are because of the way Xposed works.
-A. Your gestures will be visible to any one or any app on your device. No root required.
-B. You need root to restart the keyguard after changing the gesture full screen option. It is not mandatory, you could manually reboot if you require. All other changes will be reflected automatically, but not this one.
++ Your gestures will be visible to any one or any app on your device. No root required.
++ You need root to restart the keyguard after changing the gesture full screen option. It is not mandatory, you could manually reboot if you require. All other changes will be reflected automatically, but not this one.
 
 Links:
 ------

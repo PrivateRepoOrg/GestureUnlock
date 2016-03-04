@@ -82,17 +82,20 @@
             android:key="settings_gesture_color_ready"
             android:title="@string/gesture_color"
             android:defaultValue="@color/colorPrimary"
-            alphaSlider="true"/>
+            alphaSlider="true"
+            hexValue="true"/>
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:key="settings_gesture_color_correct"
             android:title="@string/gesture_color_correct"
             android:defaultValue="@color/colorCorrect"
-            alphaSlider="true"/>
+            alphaSlider="true"
+            hexValue="true"/>
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:key="settings_gesture_color_wrong"
             android:title="@string/gesture_color_wrong"
             android:defaultValue="@color/colorWrong"
-            alphaSlider="true"/>
+            alphaSlider="true"
+            hexValue="true"/>
         <me.rijul.gestureunlock.SeekBarPreference
             android:key="settings_prediction_score"
             android:title="@string/settings_min_score"

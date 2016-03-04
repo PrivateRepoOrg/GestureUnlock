@@ -327,7 +327,7 @@ public class KeyguardGestureView extends LinearLayout implements LockGestureView
         if (name==null) {
             mLockGestureView.setGestureVisible(mSettingsHelper.showGestureError());
             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
-            mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureError() ? 300 : 0);
+            mLockGestureView.postDelayed(mCancelGestureRunnable, mSettingsHelper.showGestureError() ? 5000 : 0);
             mTotalFailedPatternAttempts++;
             mFailedPatternAttemptsSinceLastTimeout++;
             reportFailedUnlockAttempt();
