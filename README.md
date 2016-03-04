@@ -17,7 +17,7 @@ The only caveats are because of the way Xposed works.
 Screenshots:
 ------
 ![Gesture Entry](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/gestureLock.png)
-![Custom Shortcuts](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/gestureLock.png)
+![Custom Shortcuts](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/customShortcuts_2.png)
 ![Settings](https://raw.githubusercontent.com/Rijul-Ahuja/GestureUnlock/master/Screenshots/settingsActivity_2.png)
 
 Links:
