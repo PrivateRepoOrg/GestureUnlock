@@ -47,22 +47,51 @@
             android:defaultValue="true"
             android:key="settings_gesture_background"
             android:title="@string/show_gesture_background" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_background_color"
+            android:title="@string/settings_gesture_background_color"
+            android:defaultValue="@color/gestureBackgroundColor"
+            alphaSlider="true"
+            hexValue="true"
+            android:dependency="settings_gesture_background"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_visible"
             android:title="@string/show_gesture" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="settings_gesture_fullscreen"
-            android:title="@string/settings_gesture_fullscreen" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_ready"
+            android:title="@string/gesture_color"
+            android:defaultValue="@color/colorPrimary"
+            alphaSlider="true"
+            hexValue="true"
+            android:dependency="settings_gesture_visible"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_correct"
-            android:title="@string/show_gesture_correct" />
+            android:title="@string/show_gesture_correct"
+            android:summaryOn="@string/unlocking_lag"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_correct"
+            android:title="@string/gesture_color_correct"
+            android:defaultValue="@color/colorCorrect"
+            alphaSlider="true"
+            hexValue="true"
+            android:dependency="settings_gesture_correct"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_error"
             android:title="@string/show_gesture_error" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="settings_gesture_color_wrong"
+            android:title="@string/gesture_color_wrong"
+            android:defaultValue="@color/colorWrong"
+            alphaSlider="true"
+            hexValue="true"
+            android:dependency="settings_gesture_error"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_gesture_fullscreen"
+            android:title="@string/settings_gesture_fullscreen" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_gesture_dialog"
@@ -78,24 +107,6 @@
             android:key="settings_gesture_direct_entry"
             android:title="@string/direct_gesture"
             android:summary="@string/direct_gesture_summary"/>
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            android:key="settings_gesture_color_ready"
-            android:title="@string/gesture_color"
-            android:defaultValue="@color/colorPrimary"
-            alphaSlider="true"
-            hexValue="true"/>
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            android:key="settings_gesture_color_correct"
-            android:title="@string/gesture_color_correct"
-            android:defaultValue="@color/colorCorrect"
-            alphaSlider="true"
-            hexValue="true"/>
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            android:key="settings_gesture_color_wrong"
-            android:title="@string/gesture_color_wrong"
-            android:defaultValue="@color/colorWrong"
-            alphaSlider="true"
-            hexValue="true"/>
         <me.rijul.gestureunlock.SeekBarPreference
             android:key="settings_prediction_score"
             android:title="@string/settings_min_score"

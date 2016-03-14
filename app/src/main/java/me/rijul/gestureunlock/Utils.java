@@ -17,6 +17,7 @@ public class Utils {
     public static final String SETTINGS_CHANGE_GESTURE = "settings_change_gesture";
     public static final String SETTINGS_RESTART_KEYGUARD = "settings_restart_keyguard";
     public static final String SETTINGS_GESTURE_BACKGROUND = "settings_gesture_background";
+    public static final String SETTINGS_GESTURE_BACKGROUND_COLOR = "settings_gesture_background_color";
     public static final String SETTINGS_GESTURE_VISIBLE = "settings_gesture_visible";
     public static final String SETTINGS_GESTURE_CORRECT = "settings_gesture_correct";
     public static final String SETTINGS_GESTURE_ERROR = "settings_gesture_error";

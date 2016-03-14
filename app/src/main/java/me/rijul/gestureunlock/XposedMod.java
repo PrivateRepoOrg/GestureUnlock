@@ -4,6 +4,8 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +13,9 @@ import android.content.IntentFilter;
 import android.content.res.XModuleResources;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -21,12 +25,16 @@ import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
+    public static final int RESET_WAIT_DURATION_CORRECT = 50;
+    public static final int RESET_WAIT_DURATION_WRONG = 500;
+    public static final int RESET_WAIT_DURATION_CUSTOM_SHORTCUT = 800;
 
     private XC_MethodHook mUpdateSecurityViewHook;
     private XC_MethodHook mShowSecurityScreenHook;
@@ -53,6 +61,7 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
         mSettingsHelper = new SettingsHelper();
+        mSettingsHelper.reloadSettings();
         modulePath = startupParam.modulePath;
     }
 
@@ -77,11 +86,9 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
             XposedHelpers.setStaticBooleanField(XposedHelpers.findClass(BuildConfig.APPLICATION_ID + ".SettingsActivity", lpparam.classLoader),
                     "MODULE_INACTIVE", false);
         } else if (lpparam.packageName.equals("com.htc.lockscreen")) {
-            mSettingsHelper.reloadSettings();
             createHooksIfNeeded("com.htc.lockscreen.keyguard");
             hookMethods("com.htc.lockscreen.keyguard", lpparam);
         } else if ((lpparam.packageName.contains("android.keyguard")) || (lpparam.packageName.contains("com.android.systemui"))) {
-            mSettingsHelper.reloadSettings();
             XposedBridge.log("[GestureUnlock] Found keyguard for AOSPish devices");
             createHooksIfNeeded("com.android.keyguard");
             hookMethods("com.android.keyguard", lpparam);
@@ -191,7 +198,7 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
                             unlockView.hideBouncer(0);
                         XposedHelpers.setObjectField(param.thisObject, "mIsBouncing", isBouncing);
                     }
-                    catch (Exception e) {
+                    catch (Exception ignored) {
                     }
                     param.setResult(null);
                 }
@@ -200,9 +207,17 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
 
         mShowSecurityScreenHook = new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
                 Context mContext = ((FrameLayout) param.thisObject).getContext();
                 mContext.registerReceiver(broadcastReceiver, new IntentFilter(Utils.SETTINGS_CHANGED));
+                mContext.registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        Object o = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityManagerNative",
+                                param.thisObject.getClass().getClassLoader()), "getDefault");
+                        XposedHelpers.callMethod(o, "startLockTaskModeOnCurrent");
+                    }
+                }, new IntentFilter(BuildConfig.APPLICATION_ID + ".PinThisApp"));
                 if (mSettingsHelper.isDisabled()) {
                     mKeyguardGestureView = null;
                     return;
@@ -230,10 +245,6 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
 
                 // pause old view, and ignore requests from it
                 if (oldView != null) {
-                    Point point = new Point();
-                    ((WindowManager) mContext
-                            .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(point);
-                    oldView.getLayoutParams().height = point.y;
                     Object mNullCallback = getObjectField(param.thisObject, "mNullCallback");
                     callMethod(oldView, "onPause");
                     callMethod(oldView, "setKeyguardCallback", mNullCallback);
@@ -241,8 +252,10 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
 
                 //show new view, and set a callback for it
                 Object mCallback = getObjectField(param.thisObject, "mCallback");
-                callMethod(newView, "onResume", KeyguardSecurityView.VIEW_REVEALED);
-                callMethod(newView, "setKeyguardCallback", mCallback);
+                //callMethod(newView, "onResume", KeyguardSecurityView.VIEW_REVEALED);
+                //callMethod(newView, "setKeyguardCallback", mCallback);
+                mKeyguardGestureView.onResume(KeyguardSecurityView.VIEW_REVEALED);
+                mKeyguardGestureView.setKeyguardCallback(mCallback);
 
                 // add the view to the viewflipper and show it
                 ViewFlipper mSecurityViewContainer = (ViewFlipper) getObjectField(param.thisObject, "mSecurityViewFlipper");
@@ -321,6 +334,8 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
                 if ((mSettingsHelper.isDisabled()) || (!mSettingsHelper.directlyShowGestureEntry()))
                     return;
                 if (mKeyguardGestureView==null)
+                    return;
+                if (mKeyguardGestureView.isInCall())
                     return;
                 XposedHelpers.callMethod(param.thisObject, "showBouncer");
             }

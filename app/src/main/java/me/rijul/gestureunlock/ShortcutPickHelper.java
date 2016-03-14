@@ -32,6 +32,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -120,6 +121,7 @@ public class ShortcutPickHelper {
                 mParent.startActivityFromFragment(cFrag, pickIntent, requestCode);
             }
         }
+        Log.e(ShortcutPickHelper.class.getCanonicalName(), String.valueOf(pickIntent.getExtras().getBoolean("launchPinned" + BuildConfig.APPLICATION_ID, false)));
     }
 
     private void processShortcut(final Intent intent, int requestCodeApplication, int requestCodeShortcut) {

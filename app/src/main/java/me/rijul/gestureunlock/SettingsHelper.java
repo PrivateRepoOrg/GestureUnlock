@@ -125,4 +125,6 @@ public class SettingsHelper {
 
     public float getMinPredictionScore() {return getInt(Utils.SETTINGS_PREDICTION_SCORE, 20)/10;}
 
+    public int getGestureBackgroundColor() {return getInt(Utils.SETTINGS_GESTURE_BACKGROUND_COLOR, 0x4C000000);}
+
 }

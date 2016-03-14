@@ -37,4 +37,6 @@ Thanks to:
 + [Temasek's GestureLockScreen](https://github.com/temasek/android_frameworks_base/commit/d89f57baa936d6c2114e1a3726ca4f4f8f2b2437)
 + [Tyaginator@XDA for the custom shortcuts idea](http://forum.xda-developers.com/member.php?u=5327227)
 + [PIN/Pattern Shortcuts](http://repo.xposed.info/module/com.hamzah.pinshortcuts)
++ [MaxLock's Module Active Prompt](https://github.com/Maxr1998/MaxLock/blob/master/app/src/main/java/de/Maxr1998/xposed/maxlock/ui/SettingsActivity.java#L75)
++ [MaxLock's Launcher Icon Hider](https://github.com/Maxr1998/MaxLock/blob/master/app/src/main/java/de/Maxr1998/xposed/maxlock/ui/settings/MaxLockPreferenceFragment.java#L310)
 + [MohammadAG's KnockCode for the inspiration](http://repo.xposed.info/module/com.mohammadag.knockcode)

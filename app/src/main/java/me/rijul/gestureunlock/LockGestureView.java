@@ -185,6 +185,8 @@ public class LockGestureView extends GestureOverlayView implements GestureOverla
         CORRECT_COLOR = settingsHelper.getCorrectColor();
         setDisplayMode(mGestureDisplayMode);
         setUncertainGestureColor(READY_COLOR);
+        if (settingsHelper.showGestureBackground())
+            setBackgroundColor(settingsHelper.getGestureBackgroundColor());
     }
 
     //public boolean settingsHelperIsSet() {

@@ -161,25 +161,25 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
                     if (mRequestCode==MainActivity.CHANGE_GESTURE) {
                         if (gestureMatch(mChosenGesture, "master")) {
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
-                            mLockGestureView.postDelayed(mFinishRunnable, 300);
+                            mLockGestureView.postDelayed(mFinishRunnable, XposedMod.RESET_WAIT_DURATION_CORRECT);
                             (new SettingsHelper(getActivity())).setNotVirgin();
                             mGestureStore.addGesture("master", mChosenGesture);
                         } else {
                             getView().findViewById(R.id.next_button).setEnabled(false);
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
                             mChosenGesture = null;
-                            mLockGestureView.postDelayed(mClearGestureRunnable, 300);
+                            mLockGestureView.postDelayed(mClearGestureRunnable, XposedMod.RESET_WAIT_DURATION_WRONG);
                         }
                     } else {
                         if (gestureMatch(mChosenGesture, mUri + "|" + mName)) {
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
-                            mLockGestureView.postDelayed(mFinishRunnable, 300);
+                            mLockGestureView.postDelayed(mFinishRunnable, XposedMod.RESET_WAIT_DURATION_CORRECT);
                             //Toast.makeText(getActivity(), R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
                         } else {
                             getView().findViewById(R.id.next_button).setEnabled(false);
                             mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
                             mChosenGesture = null;
-                            mLockGestureView.postDelayed(mClearGestureRunnable, 300);
+                            mLockGestureView.postDelayed(mClearGestureRunnable, XposedMod.RESET_WAIT_DURATION_WRONG);
                         }
                     }
                 }
@@ -259,11 +259,11 @@ public class MainFragment extends Fragment implements LockGestureView.OnLockGest
         if (mRequestCode==-1) {
             if (gestureMatch(mChosenGesture, "master")) {
                 mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Correct);
-                mLockGestureView.postDelayed(mFinishRunnable, 300);
+                mLockGestureView.postDelayed(mFinishRunnable, XposedMod.RESET_WAIT_DURATION_CORRECT);
             } else {
                 mLockGestureView.setDisplayMode(LockGestureView.DisplayMode.Wrong);
                 mChosenGesture = null;
-                mLockGestureView.postDelayed(mClearGestureRunnable, 300);
+                mLockGestureView.postDelayed(mClearGestureRunnable, XposedMod.RESET_WAIT_DURATION_WRONG);
             }
         }
     }

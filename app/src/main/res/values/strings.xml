@@ -67,9 +67,11 @@
     <string name="direct_gesture_summary">Avoid the notification screen, if any</string>
     <string name="gesture_color">Gesture color</string>
     <string name="gesture_color_correct">Gesture correct color</string>
-    <string name="gesture_color_wrong">Gesture wrong color</string>
+    <string name="gesture_color_wrong">Gesture error color</string>
     <string name="settings_gesture_fullscreen">Fullscreen gesture</string>
     <string name="gesture_settings_title">Gesture Settings</string>
     <string name="settings_min_score_desc">Please change this only if you have problem with the gestures being recognized; setting too high a value may lock you out of your device</string>
     <string name="settings_min_score">Minimum prediction score</string>
+    <string name="unlocking_lag">Will cause small lag while unlocking</string>
+    <string name="settings_gesture_background_color">Gesture background color</string>
 </resources>

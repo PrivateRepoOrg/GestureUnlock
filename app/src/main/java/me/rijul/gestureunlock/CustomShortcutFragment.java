@@ -45,6 +45,8 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
             return object1.name.compareTo(object2.name);
         }
     };
+    private File mGestureStoreFile = new File("/data/data/" + BuildConfig.APPLICATION_ID + "/files", "gu_gestures");
+    private GestureLibrary mGestureStore = GestureLibraries.fromFile(mGestureStoreFile);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -122,7 +124,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         menu.setHeaderTitle(((NamedGesture) info.targetView.getTag()).name);
         menu.add(0, MENU_ID_EDIT, 0, R.string.edit);
-        //menu.add(0, MENU_ID_DELETE, 0, R.string.delete);
+        menu.add(0, MENU_ID_DELETE, 0, R.string.delete);
     }
 
     @Override
@@ -150,12 +152,11 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
     }
 
     private void deleteShortcut(NamedGesture namedGesture) {
-        GestureLibrary sStore = GestureLibraries.fromFile(new File("/data/data/" + BuildConfig.APPLICATION_ID + "/files", "gu_gestures"));
-        sStore.removeGesture(namedGesture.uri + "|" + namedGesture.name, namedGesture.gesture);
-        if (sStore.getGestures(namedGesture.uri + "|" + namedGesture.name) != null)
-            sStore.removeEntry(namedGesture.uri + "|" + namedGesture.name);
-        sStore.save();
-        Toast.makeText(getActivity(), namedGesture.name, Toast.LENGTH_SHORT).show();
+        mGestureStore.load();
+        mGestureStore.removeEntry(namedGesture.uri + "|" + namedGesture.name);
+        mGestureStore.save();
+        getActivity().sendBroadcast(new Intent(Utils.SETTINGS_CHANGED));
+        mGestureStoreFile.setReadable(true, false);
         GestureAdapter gestureAdapter = ((GestureAdapter) getListView().getAdapter());
         gestureAdapter.setNotifyOnChange(false);
         gestureAdapter.remove(namedGesture);
@@ -229,7 +230,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
                 return STATUS_ERROR;
             }
 
-            final GestureLibrary store = GestureLibraries.fromFile(new File("/data/data/" + BuildConfig.APPLICATION_ID + "/files", "gu_gestures"));;
+            final GestureLibrary store = mGestureStore;
 
             if (store.load()) {
                 for (String name : store.getGestureEntries()) {

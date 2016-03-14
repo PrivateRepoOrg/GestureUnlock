@@ -42,10 +42,6 @@ public class CustomShortcutActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==RESULT_OK) {
             switch (requestCode) {
-                case MainActivity.NEW_SHORTCUT:
-                    Toast.makeText(CustomShortcutActivity.this, R.string.reboot_or_keyguard_restart, Toast.LENGTH_SHORT).show();
-                    ((CustomShortcutFragment) getFragmentManager().findFragmentById(R.id.fragment_container)).loadShortcuts();
-                    break;
                 case ShortcutPickHelper.REQUEST_CREATE_SHORTCUT:
                 case ShortcutPickHelper.REQUEST_PICK_APPLICATION:
                 case ShortcutPickHelper.REQUEST_PICK_SHORTCUT:
