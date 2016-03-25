@@ -13,8 +13,6 @@ I personally test on CM13, and I will support CM12.0, CM12.1, AOSP 5.x and 6.0.x
 The only caveats are because of the way Xposed works.
 + Your gestures will be visible to any one or any app on your device. No root required.
 + You need root to restart the keyguard after changing the gesture full screen option. It is not mandatory, you could manually reboot if you require. All other changes will be reflected automatically, but not this one.
- 
-Permission details : READ_PHONE_STATE is used on Marshmallow devices to determine the current call state and thus change the emergency button between 'return to call' and 'emergency'.
 
 Screenshots:
 ------
