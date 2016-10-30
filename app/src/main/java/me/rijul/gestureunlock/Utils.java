@@ -39,7 +39,6 @@ public class Utils {
     public static final String SETTINGS_CHANGED = BuildConfig.APPLICATION_ID + "_SETTINGS_CHANGED";
 
     public static final String ABOUT_DISCLAIMER = "about_disclaimer";
-    public static final String ABOUT_RIJUL = "about_rijul";
 
     private static class killPackage extends AsyncTask<String, Void, Void> {
         @Override

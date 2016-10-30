@@ -26,7 +26,17 @@
     </Preference>
 
     <Preference
-        android:key="about_rijul"
         android:title="@string/about_author"
-        android:summary="@string/about_rijul_ahuja"/>
+        android:summary="@string/about_rijul_ahuja">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/Rijul-Ahuja"/>
+      </Preference>
+
+    <PreferenceCategory android:title="@string/about_translators">
+        <Preference
+            android:title="@string/about_translator_chinese_dlhxr">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/dlhxr"/>
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

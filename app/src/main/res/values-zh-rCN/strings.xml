@@ -60,8 +60,6 @@
     <string name="about_disclaimer_summary">作者和译者不承担对模块引起的任何破坏不承担任何责任</string>
     <string name="about_source_code">开源代码</string>
     <string name="about_author">作者</string>
-    <string name="about_rijul_ahuja" translatable="false">Rijul Ahuja</string>
-    <string name="about_disclaimer_message">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE</string>
     <string name="reboot_launcher_restart">可能需要重启手机或者启动器以应用设置</string>
     <string name="direct_gesture">直接显示手势解锁界面</string>
     <string name="direct_gesture_summary">跳过通知界面（如果存在）</string>

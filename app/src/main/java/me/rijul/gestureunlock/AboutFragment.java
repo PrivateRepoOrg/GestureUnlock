@@ -16,7 +16,6 @@ import android.widget.TextView;
  * Created by rijul on 3/3/16.
  */
 public class AboutFragment extends PreferenceFragment {
-    private static final String FACEBOOK_RIJUL = "rijul.ahuja";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,18 +43,7 @@ public class AboutFragment extends PreferenceFragment {
             Dialog dialog = builder.create();
             dialog.show();
             return true;
-        } else if (key.equals(Utils.ABOUT_RIJUL)) {
-            openFacebook(FACEBOOK_RIJUL);
-            return true;
         }
         return false;
-    }
-
-    private void openFacebook(String profile) {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/" + profile)));
-        } catch (Exception e) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + profile)));
-        }
     }
 }

@@ -16,8 +16,8 @@ android {
         applicationId "me.rijul.gestureunlock"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 14
-        versionName "1.2.1"
+        versionCode 15
+        versionName "1.2.2"
     }
     buildTypes {
         release {
