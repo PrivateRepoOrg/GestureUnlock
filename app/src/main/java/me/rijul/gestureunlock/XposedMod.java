@@ -14,7 +14,11 @@ import android.content.res.XModuleResources;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -34,7 +38,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
     public static final int RESET_WAIT_DURATION_CORRECT = 50;
     public static final int RESET_WAIT_DURATION_WRONG = 500;
-    public static final int RESET_WAIT_DURATION_CUSTOM_SHORTCUT = 800;
 
     private XC_MethodHook mUpdateSecurityViewHook;
     private XC_MethodHook mShowSecurityScreenHook;
@@ -70,6 +73,7 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         if ((resParam.packageName.contains("android.keyguard")) || (resParam.packageName.contains("com.android.systemui"))) {
             XModuleResources modRes = XModuleResources.createInstance(modulePath, resParam.res);
             if (mSettingsHelper.gestureFullscreen()) {
+                XposedBridge.log("[GestureUnlock] Setting resources to fullscreen!");
                 resParam.res.setReplacement(resParam.packageName, "dimen", "keyguard_security_height", modRes.fwd(R.dimen.replace_keyguard_security_max_height));
                 resParam.res.setReplacement(resParam.packageName, "dimen", "keyguard_security_view_margin", modRes.fwd(R.dimen.replace_keyguard_security_view_margin));
                 resParam.res.setReplacement(resParam.packageName, "dimen", "keyguard_security_width", modRes.fwd(R.dimen.replace_keyguard_security_max_height));
@@ -210,15 +214,14 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
             protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
                 Context mContext = ((FrameLayout) param.thisObject).getContext();
                 mContext.registerReceiver(broadcastReceiver, new IntentFilter(Utils.SETTINGS_CHANGED));
-                mContext.registerReceiver(new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        Object o = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityManagerNative",
-                                param.thisObject.getClass().getClassLoader()), "getDefault");
-                        XposedHelpers.callMethod(o, "startLockTaskModeOnCurrent");
-                    }
-                }, new IntentFilter(BuildConfig.APPLICATION_ID + ".PinThisApp"));
-                if (mSettingsHelper.isDisabled()) {
+                if (mSettingsHelper.isDisabled() || mSettingsHelper == null) {
+                    //find whichever view is enabled
+                    View pinView = (View) callMethod(param.thisObject, "getSecurityView", param.args[0]);
+                    ViewGroup.LayoutParams layoutParams = pinView.getLayoutParams();
+                    //set width and height
+                    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, mContext.getResources().getDisplayMetrics());
+                    layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, mContext.getResources().getDisplayMetrics());
+                    pinView.setLayoutParams(layoutParams);
                     mKeyguardGestureView = null;
                     return;
                 }
@@ -227,6 +230,13 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
                         param.thisObject.getClass().getClassLoader());
                 Object patternMode = XposedHelpers.getStaticObjectField(SecurityMode, "Pattern");
                 if (!patternMode.equals(securityMode)) {
+                    //find whichever view is enabled
+                    View pinView = (View) callMethod(param.thisObject, "getSecurityView", param.args[0]);
+                    ViewGroup.LayoutParams layoutParams = pinView.getLayoutParams();
+                    //set width and height
+                    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, mContext.getResources().getDisplayMetrics());
+                    layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, mContext.getResources().getDisplayMetrics());
+                    pinView.setLayoutParams(layoutParams);
                     mKeyguardGestureView = null;
                     return;
                 }
@@ -249,6 +259,27 @@ public class XposedMod implements IXposedHookLoadPackage, IXposedHookZygoteInit,
                     callMethod(oldView, "onPause");
                     callMethod(oldView, "setKeyguardCallback", mNullCallback);
                 }
+
+                View pinView = (View) callMethod(param.thisObject, "getSecurityView", patternMode);
+                ViewGroup.LayoutParams layoutParams = pinView.getLayoutParams();
+                if (mSettingsHelper.gestureFullscreen())  {
+                    XposedBridge.log("[GestureUnlock] Setting view to fullscreen!");
+                    Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    int rotation = display.getRotation();
+                    if (rotation==Surface.ROTATION_0 || rotation== Surface.ROTATION_180) {
+                        layoutParams.height = size.y;
+                        layoutParams.width = size.x;
+                    } else {
+                        layoutParams.height = size.x;
+                        layoutParams.width = size.y;
+                    }
+                } else {
+                    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, mContext.getResources().getDisplayMetrics());
+                    layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, mContext.getResources().getDisplayMetrics());
+                }
+                newView.setLayoutParams(layoutParams);
 
                 //show new view, and set a callback for it
                 Object mCallback = getObjectField(param.thisObject, "mCallback");

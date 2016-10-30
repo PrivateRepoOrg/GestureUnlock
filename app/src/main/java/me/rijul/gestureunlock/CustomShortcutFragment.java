@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -153,7 +155,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
 
     private void deleteShortcut(NamedGesture namedGesture) {
         mGestureStore.load();
-        mGestureStore.removeEntry(namedGesture.uri + "|" + namedGesture.name);
+        mGestureStore.removeEntry(namedGesture.uri + "|" + namedGesture.name + "|");
         mGestureStore.save();
         getActivity().sendBroadcast(new Intent(Utils.SETTINGS_CHANGED));
         mGestureStoreFile.setReadable(true, false);
@@ -240,13 +242,12 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
                         final Bitmap bitmap = gesture.toBitmap(mThumbnailSize, mThumbnailSize,
                                 mThumbnailInset, mPathColor);
                         final NamedGesture namedGesture = new NamedGesture();
-                        final int separator = name.indexOf('|');
-                        if (separator==-1)
+                        String[] split = name.split("\\|");
+                        if (split[0].equals(name))
                             continue;
                         namedGesture.gesture = gesture;
-                        namedGesture.uri = name.substring(0, separator);
-                        namedGesture.name = name.substring(separator + 1);
-
+                        namedGesture.uri = split[0];
+                        namedGesture.name = split[1];
                         mAdapter.addBitmap(namedGesture.gesture.getID(), bitmap);
                         publishProgress(namedGesture);
                     }
