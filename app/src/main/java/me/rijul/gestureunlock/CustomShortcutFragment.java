@@ -193,7 +193,7 @@ public class CustomShortcutFragment extends ListFragment implements ShortcutPick
                 convertView = mInflater.inflate(R.layout.shortcut_item, parent, false);
             }
             final NamedGesture namedGesture = getItem(position);
-            final TextView label = (TextView) convertView;
+            final TextView label = (TextView) convertView.findViewById(android.R.id.text1);
             label.setTag(namedGesture);
             label.setText(namedGesture.name);
             label.setCompoundDrawablesWithIntrinsicBounds(mThumbnails.get(namedGesture.gesture.getID()),
